@@ -19,6 +19,7 @@ type ReceiverConfig struct {
 	Opscenter     *OpsCenterConfig     `yaml:"opscenter"`
 	Teams         *TeamsConfig         `yaml:"teams"`
 	BigQuery      *BigQueryConfig      `yaml:"bigquery"`
+	T4            *T4Config            `yaml:"t4"`
 }
 
 func (r *ReceiverConfig) Validate() error {
@@ -85,6 +86,10 @@ func (r *ReceiverConfig) GetSink() (Sink, error) {
 
 	if r.BigQuery != nil {
 		return NewBigQuerySink(r.BigQuery)
+	}
+
+	if r.T4 != nil {
+		return NewT4Sink()
 	}
 
 	return nil, errors.New("unknown sink")

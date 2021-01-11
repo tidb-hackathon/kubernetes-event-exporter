@@ -7,5 +7,5 @@ route:
         - receiver: "dump"
 receivers:
   - name: "dump"
-    file:
+    t4:
       path: "/dev/stdout"
