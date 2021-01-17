@@ -19,7 +19,7 @@ type T4 struct {
 }
 
 func NewT4Sink() (*T4, error) {
-	db, err := sql.Open("mysql", "local:local@/test")
+	db, err := sql.Open("mysql", "test:test@tcp(10.120.94.3:4000)/test")
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +36,10 @@ func (t *T4) Send(ctx context.Context, ev *kube.EnhancedEvent) error {
 		return fmt.Errorf("json error on send: %s", err)
 	}
 
-	_, err = t.db.Exec("insert into events (event) values (?)", v)
+	kind := ev.InvolvedObject.Kind
+	ct := ev.CreationTimestamp.Format("2006-01-02 15:04:05")
+	_, err = t.db.Exec("INSERT INTO event (kind, name, namespace, reason, creation_timestamp, raw) VALUES (?, ?, ?, ?, ?, ?)", kind, ev.Name, ev.Namespace, ev.Reason, ct, v)
+	fmt.Println(err)
 	return err
 }
 
